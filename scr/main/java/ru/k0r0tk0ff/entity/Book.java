@@ -26,6 +26,9 @@ public class Book {
     private Long bookId;
     private String name;
 
+    @Column(name = "price")
+    private Double price;
+
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "book")
     @JoinColumn(name = "wishlist_id", referencedColumnName = "wishlist_id")
     private Wishlist wishlist;
@@ -65,5 +68,13 @@ public class Book {
 
     public void setWishlist(Wishlist wishlist) {
         this.wishlist = wishlist;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 }
