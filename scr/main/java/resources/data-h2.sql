@@ -1,0 +1,14 @@
+INSERT INTO AUTHOR (NAME) VALUES ('Пушкин');
+INSERT INTO AUTHOR (NAME) VALUES ('Толстой');
+INSERT INTO AUTHOR (NAME) VALUES ('Шолохов');
+CREATE CONSTANT pushkin_id VALUE (SELECT AUTHOR_ID FROM author WHERE NAME = 'Пушкин');
+CREATE CONSTANT sholohov_id VALUE (SELECT AUTHOR_ID FROM author WHERE NAME = 'Шолохов');
+CREATE CONSTANT tolstoy_id VALUE (SELECT AUTHOR_ID FROM author WHERE NAME = 'Толстой');
+INSERT INTO BOOK (AUTHOR_ID, NAME, PRICE) VALUES (pushkin_id, 'Пиковая дама', '400.50');
+INSERT INTO BOOK (AUTHOR_ID, NAME, PRICE) VALUES (pushkin_id, 'Капитанская дочка', '420.90');
+INSERT INTO BOOK (AUTHOR_ID, NAME, PRICE) VALUES (pushkin_id, 'Медный всадник', '1410.10');
+INSERT INTO BOOK (AUTHOR_ID, NAME, PRICE) VALUES (sholohov_id, 'Тихий Дон', '800.00');
+INSERT INTO BOOK (AUTHOR_ID, NAME, PRICE) VALUES (tolstoy_id, 'Война и мир', '1500.00');
+DROP constant pushkin_id;
+DROP constant sholohov_id;
+DROP constant tolstoy_id;
