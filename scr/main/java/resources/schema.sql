@@ -1,18 +1,18 @@
 CREATE TABLE IF NOT EXISTS AUTHOR(
-    author_id INT PRIMARY KEY,
-	  name VARCHAR(60) NOT NULL
+  	author_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+	name VARCHAR(60) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS BOOK(
-    book_id INT PRIMARY KEY,
-	  name VARCHAR(60) NOT NULL,
-  	author_id INT,
-	  FOREIGN KEY (author_id) REFERENCES AUTHOR(author_id)
+    	book_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+	name VARCHAR(60) NOT NULL,
+	author_id INT,
+	FOREIGN KEY (author_id) REFERENCES AUTHOR(author_id)
 );
 
 CREATE TABLE IF NOT EXISTS WISHLIST(
-    wishlist_id INT PRIMARY KEY,
-    count INT NOT NULL,
-  	book_id INT NOT NULL,
-  	FOREIGN KEY (book_id) REFERENCES BOOK(book_id)
+    	wishlist_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    	count INT NOT NULL,
+	book_id INT NOT NULL,
+	FOREIGN KEY (book_id) REFERENCES BOOK(book_id)
 );
