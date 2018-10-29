@@ -1,5 +1,7 @@
 package ru.k0r0tk0ff.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -9,6 +11,8 @@ import java.util.Set;
  */
 
 @Entity
+@Table(name = "AUTHOR")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Author {
 
     public Author() {
@@ -47,5 +51,13 @@ public class Author {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(Set<Book> books) {
+        this.books = books;
     }
 }
