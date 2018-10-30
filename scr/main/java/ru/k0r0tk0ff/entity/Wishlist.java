@@ -1,5 +1,6 @@
 package ru.k0r0tk0ff.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -27,6 +28,7 @@ public class Wishlist {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "book_id", referencedColumnName = "book_id")
+    @JsonBackReference
     private Book book;
 
     public Long getWishlistId() {
