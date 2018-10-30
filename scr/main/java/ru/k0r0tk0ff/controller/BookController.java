@@ -1,24 +1,17 @@
 package ru.k0r0tk0ff.controller;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 import ru.k0r0tk0ff.entity.Book;
 import ru.k0r0tk0ff.service.BookService;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-/**
- * Created by korotkov_a_a on 29.10.2018.
- */
 
 /**
  * Created by korotkov_a_a on 29.10.2018.
