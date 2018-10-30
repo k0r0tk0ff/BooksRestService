@@ -13,6 +13,7 @@ import ru.k0r0tk0ff.entity.Wishlist;
 import ru.k0r0tk0ff.service.WishlistService;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by korotkov_a_a on 29.10.2018.
@@ -35,7 +36,6 @@ public class WishlistController {
         List<Wishlist> wishlists = wishlistService.getAllWishlists();
         if (wishlists.isEmpty()) {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
-            // You many decide to return HttpStatus.NOT_FOUND
         }
         return new ResponseEntity<List<Wishlist>>(wishlists, HttpStatus.OK);
     }
@@ -43,11 +43,9 @@ public class WishlistController {
     @RequestMapping(value = "/api/wishlist/{id}", method = RequestMethod.GET)
     public ResponseEntity<Wishlist> getWishlistById(@PathVariable("id") Long id){
         logger.info("Get wishlist with id = {}", id);
-        Wishlist wishlist = wishlistService.getWishlistById(id);
-        if(wishlist == null) {
-            logger.error("Wishlist with id {} not found.", id);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(wishlist, HttpStatus.OK);
+        Optional<Wishlist> wishlist = wishlistService.getWishlistById(id);
+        if(wishlist.isPresent()) {return new ResponseEntity<Wishlist>(wishlist.get(), HttpStatus.OK);}
+        logger.error("Wishlist with id = {} not found!", id);
+        return new ResponseEntity<Wishlist>(HttpStatus.NO_CONTENT);
     }
 }
