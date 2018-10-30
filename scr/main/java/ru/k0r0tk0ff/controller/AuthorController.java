@@ -5,10 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.k0r0tk0ff.entity.Author;
 import ru.k0r0tk0ff.service.AuthorService;
 
@@ -42,6 +39,15 @@ public class AuthorController {
 
     @RequestMapping(value = "/api/author/{id}", method = RequestMethod.GET)
     public ResponseEntity<Author> getAuthorById(@PathVariable("id") Long id){
+        logger.info("Get author with id = {}", id);
+        Optional<Author> author = authorService.getAuthorById(id);
+        if(author.isPresent()) {return new ResponseEntity<>(author.get(), HttpStatus.OK);}
+        logger.error("Author with id {} not found!", id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @RequestMapping(value = "/api/author/{id}", method = RequestMethod.POST)
+    public ResponseEntity<Author> setAuthor(@PathVariable("id") Long id){
         logger.info("Get author with id = {}", id);
         Optional<Author> author = authorService.getAuthorById(id);
         if(author.isPresent()) {return new ResponseEntity<>(author.get(), HttpStatus.OK);}
