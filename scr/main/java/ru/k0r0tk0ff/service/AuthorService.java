@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.k0r0tk0ff.entity.Author;
 import ru.k0r0tk0ff.repository.AuthorRepo;
-
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by korotkov_a_a on 29.10.2018.
@@ -21,12 +21,11 @@ public class AuthorService {
         this.authorRepo = authorRepo;
     }
 
-    public Author getAuthorById(Long id) {
-        return authorRepo.getOne(id);
+    public Optional<Author> getAuthorById(Long id) {
+        return authorRepo.findById(id);
     }
 
     public List<Author> getAllAuthors() {
         return authorRepo.findAll();
     }
-
 }
