@@ -6,6 +6,7 @@ import ru.k0r0tk0ff.entity.Wishlist;
 import ru.k0r0tk0ff.repository.WishlistRepo;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by korotkov_a_a on 29.10.2018.
@@ -20,8 +21,8 @@ public class WishlistService {
         this.wishlistRepo = WishlistRepo;
     }
 
-    public Wishlist getWishlistById(Long id) {
-        return wishlistRepo.getOne(id);
+    public Optional<Wishlist> getWishlistById(Long id) {
+        return wishlistRepo.findById(id);
     }
 
     public List<Wishlist> getAllWishlists() {
