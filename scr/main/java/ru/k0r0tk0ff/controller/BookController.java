@@ -7,11 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 import ru.k0r0tk0ff.entity.Book;
 import ru.k0r0tk0ff.service.BookService;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -34,16 +36,28 @@ public class BookController {
         this.bookService = BookService;
     }
 
-    @RequestMapping(value = "/api/book/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/api/book/{id}")
     public ResponseEntity<Book> getBookById(@PathVariable("id") Long id){
         logger.info("Get book with id = {}", id);
         Optional<Book> book = bookService.getBookById(id);
-        if(book.isPresent()) {return new ResponseEntity<Book>(book.get(), HttpStatus.OK);}
+        if(book.isPresent()) {return new ResponseEntity<>(book.get(), HttpStatus.OK);}
         logger.error("Book with id = {} not found!", id);
-        return new ResponseEntity<Book>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @RequestMapping(value = "/api/books", method = RequestMethod.GET)
+    @DeleteMapping(value = "/api/book/{id}")
+    public ResponseEntity<String> delBookById(@PathVariable("id") Long id){
+        logger.info("Delete book with id = {}", id);
+        Map<String, String> results = bookService.delBookById(id);
+        if(results.containsKey("SUCCESS")) {
+            logger.info(results.get("SUCCESS"));
+            return new ResponseEntity<>(results.get("SUCCESS"), HttpStatus.OK);
+        }
+        logger.error("Book with id = {} was not delete!", id);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping(value = "/api/books")
     public ResponseEntity<List<Book>> listAllBooks() {
         List<Book> books = bookService.getAllBooks();
         if (books.isEmpty()) {
@@ -51,5 +65,35 @@ public class BookController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(books, HttpStatus.OK);
+    }
+
+    @PostMapping("/api/book")
+    public ResponseEntity<?> createBook(@RequestBody Map<String, String> bookParameters) {
+        Map<String, String> results = bookService.createBook(bookParameters);
+        if(results.containsKey("SUCCESS")) {
+            logger.info("{} Book name = \"{}\" Author id = \"{}\"",
+                    results.get("SUCCESS"),
+                    bookParameters.get("name"),
+                    bookParameters.get("author_id"));
+            return new ResponseEntity<>(results.get("SUCCESS"), HttpStatus.OK);
+        }
+            logger.error("FAIL! {}", results.get("FAIL"));
+            return new ResponseEntity<>(results.get("FAIL"),HttpStatus.CONFLICT);
+    }
+
+    @PutMapping("/api/book")
+    public ResponseEntity<?> updateBook(@RequestBody Map<String, String> bookParameters) {
+        Map<String, String> results = bookService.updateBook(bookParameters);
+        if(results.containsKey("SUCCESS")) {
+            logger.info("{} Book name = \"{}\" Author id = \"{}\" price = \"{}\"",
+                    results.get("SUCCESS"),
+                    bookParameters.get("name"),
+                    bookParameters.get("author_id"),
+                    bookParameters.get("price"));
+            return new ResponseEntity<>(results.get("SUCCESS"), HttpStatus.OK);
+        }
+
+        logger.error("FAIL! {}", results.get("FAIL"));
+        return new ResponseEntity<>(results.get("FAIL"),HttpStatus.CONFLICT);
     }
 }
