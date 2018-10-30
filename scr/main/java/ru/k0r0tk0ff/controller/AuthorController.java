@@ -13,6 +13,7 @@ import ru.k0r0tk0ff.entity.Author;
 import ru.k0r0tk0ff.service.AuthorService;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by korotkov_a_a on 29.10.2018.
@@ -35,21 +36,16 @@ public class AuthorController {
         List<Author> authors = authorService.getAllAuthors();
         if (authors.isEmpty()) {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
-            // You many decide to return HttpStatus.NOT_FOUND
         }
-        return new ResponseEntity<List<Author>>(authors, HttpStatus.OK);
+        return new ResponseEntity<>(authors, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/api/author/{id}", method = RequestMethod.GET)
     public ResponseEntity<Author> getAuthorById(@PathVariable("id") Long id){
         logger.info("Get author with id = {}", id);
-        Author author = authorService.getAuthorById(id);
-        if(author == null) {
-            logger.error("Author with id {} not found.", id);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(author, HttpStatus.OK);
+        Optional<Author> author = authorService.getAuthorById(id);
+        if(author.isPresent()) {return new ResponseEntity<>(author.get(), HttpStatus.OK);}
+        logger.error("Author with id {} not found!", id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-
 }
