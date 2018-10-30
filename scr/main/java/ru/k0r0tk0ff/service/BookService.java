@@ -1,11 +1,11 @@
 package ru.k0r0tk0ff.service;
 
-        import org.springframework.beans.factory.annotation.Autowired;
-        import org.springframework.stereotype.Service;
-        import ru.k0r0tk0ff.entity.Book;
-        import ru.k0r0tk0ff.repository.BookRepo;
-
-        import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import ru.k0r0tk0ff.entity.Book;
+import ru.k0r0tk0ff.repository.BookRepo;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by korotkov_a_a on 29.10.2018.
@@ -21,8 +21,8 @@ public class BookService {
         this.bookRepo = bookRepo;
     }
 
-    public Book getBookById(Long id) {
-        return bookRepo.getOne(id);
+    public Optional<Book> getBookById(Long id) {
+        return bookRepo.findById(id);
     }
 
     public List<Book> getAllBooks() {
