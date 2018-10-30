@@ -31,16 +31,6 @@ public class BookController {
         this.bookService = BookService;
     }
 
-/*    @RequestMapping(value = "/api/books", method = RequestMethod.GET)
-    public ResponseEntity<List<Book>> listAllBooks() {
-        List<Book> Books = bookService.getAllBooks();
-        if (Books.isEmpty()) {
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
-            // You many decide to return HttpStatus.NOT_FOUND
-        }
-        return new ResponseEntity<List<Book>>(Books, HttpStatus.OK);
-    }*/
-
     @RequestMapping(value = "/api/book/{id}", method = RequestMethod.GET)
     public ResponseEntity<Book> getBookById(@PathVariable("id") Long id){
         logger.info("Get book with id = {}", id);
