@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.k0r0tk0ff.entity.Book;
+import ru.k0r0tk0ff.service.AuthorService;
 import ru.k0r0tk0ff.service.BookService;
 
 import java.util.List;
@@ -23,17 +24,22 @@ public class BookController {
     private static final Logger logger = LoggerFactory.getLogger(BookController.class);
 
     private BookService bookService;
+    private AuthorService authorService;
 
     @Autowired
-    public BookController(BookService BookService) {
-        this.bookService = BookService;
+    public BookController(BookService bookService, AuthorService authorService) {
+        this.bookService = bookService;
+        this.authorService = authorService;
     }
 
     @GetMapping(value = "/api/book/{id}")
-    public ResponseEntity<Book> getBookById(@PathVariable("id") Long id){
+    public ResponseEntity<Map<String, String>> getBookById(@PathVariable("id") Long id){
         logger.info("Get book with id = {}", id);
         Optional<Book> book = bookService.getBookById(id);
-        if(book.isPresent()) {return new ResponseEntity<>(book.get(), HttpStatus.OK);}
+        if(book.isPresent()) {
+            Map<String, String> bookParameters = bookService.getBookParameters(id);
+            return new ResponseEntity<>(bookParameters, HttpStatus.OK);
+        }
         logger.error("Book with id = {} not found!", id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -62,12 +68,13 @@ public class BookController {
 
     @PostMapping("/api/book")
     public ResponseEntity<?> createBook(@RequestBody Map<String, String> bookParameters) {
+
         Map<String, String> results = bookService.createBook(bookParameters);
         if(results.containsKey("SUCCESS")) {
-            logger.info("{} Book name = \"{}\" Author id = \"{}\"",
+            logger.info("{} Book name = \"{}\" Author name = \"{}\"",
                     results.get("SUCCESS"),
                     bookParameters.get("name"),
-                    bookParameters.get("author_id"));
+                    bookParameters.get("author_name"));
             return new ResponseEntity<>(results.get("SUCCESS"), HttpStatus.OK);
         }
             logger.error("FAIL! {}", results.get("FAIL"));
@@ -85,7 +92,6 @@ public class BookController {
                     bookParameters.get("price"));
             return new ResponseEntity<>(results.get("SUCCESS"), HttpStatus.OK);
         }
-
         logger.error("FAIL! {}", results.get("FAIL"));
         return new ResponseEntity<>(results.get("FAIL"),HttpStatus.CONFLICT);
     }
