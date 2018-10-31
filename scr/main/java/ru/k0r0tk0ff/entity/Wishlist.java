@@ -54,4 +54,17 @@ public class Wishlist {
     public void setBook(Book book) {
         this.book = book;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Wishlist wishlist = (Wishlist) o;
+        return book.equals(wishlist.book);
+    }
+
+    @Override
+    public int hashCode() {
+        return book.hashCode();
+    }
 }
