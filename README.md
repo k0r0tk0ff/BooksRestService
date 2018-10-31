@@ -1,5 +1,5 @@
 # BooksRestService
-BooksRestService - REST сервис для работы с сущностями "book", "author", "wishlist", согласно задания.
+BooksRestService - REST сервис для работы с сущностями "book", "author", "wishlist", согласно задания.  
 (задание - https://github.com/k0r0tk0ff/BooksRestService/blob/master/task.md)
 
 ##### При наличии в path пути до java cтрока запуска проекта примет вид - 
