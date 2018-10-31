@@ -28,7 +28,7 @@ public class AuthorController {
         this.authorService = authorService;
     }
 
-    @RequestMapping(value = "/api/authors", method = RequestMethod.GET)
+    @GetMapping(value = "/api/authors")
     public ResponseEntity<List<Author>> listAllAuthors() {
         List<Author> authors = authorService.getAllAuthors();
         if (authors.isEmpty()) {
@@ -37,7 +37,7 @@ public class AuthorController {
         return new ResponseEntity<>(authors, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/api/author/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/api/author/{id}")
     public ResponseEntity<Author> getAuthorById(@PathVariable("id") Long id){
         logger.info("Get author with id = {}", id);
         Optional<Author> author = authorService.getAuthorById(id);
@@ -46,14 +46,12 @@ public class AuthorController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @RequestMapping(value = "/api/author/{id}", method = RequestMethod.POST)
+    @PostMapping(value = "/api/author")
     public ResponseEntity<Author> setAuthor(@PathVariable("id") Long id){
-        logger.info("Get author with id = {}", id);
+        logger.info("Create author with id = {}", id);
         Optional<Author> author = authorService.getAuthorById(id);
         if(author.isPresent()) {return new ResponseEntity<>(author.get(), HttpStatus.OK);}
         logger.error("Author with id {} not found!", id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-
 }
