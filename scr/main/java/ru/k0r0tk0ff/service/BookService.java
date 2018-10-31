@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import ru.k0r0tk0ff.entity.Book;
-import ru.k0r0tk0ff.repository.AuthorRepo;
 import ru.k0r0tk0ff.repository.BookRepo;
 import java.util.HashMap;
 import java.util.List;
@@ -38,12 +37,12 @@ public class BookService {
     };
 
     private BookRepo bookRepo;
-    private AuthorRepo authorRepo;
+    private AuthorService authorService;
 
     @Autowired
-    public BookService(BookRepo bookRepo, AuthorRepo authorRepo) {
+    public BookService(BookRepo bookRepo, AuthorService authorService) {
         this.bookRepo = bookRepo;
-        this.authorRepo = authorRepo;
+        this.authorService = authorService;
     }
 
     public Optional<Book> getBookById(Long id) {
@@ -63,21 +62,17 @@ public class BookService {
         return this.bookRepo.existsById(id);
     }
 
-    private boolean isAuthorExist(String author_id) {
-        return authorRepo.existsById(Long.parseLong(author_id));
-    }
-
     private void saveBookInBookRepo(Book book) {
         this.bookRepo.save(book);
     }
 
     public Map<String, String> createBook(Map<String, String> bookParameters) {
-        if(!isAuthorExist(bookParameters.get("author_id"))){
-            return FAIL_AUTHOR_NOT_EXIST;
-        }
         Book book = bookBuilder(bookParameters);
         if(isBookExist(book)) {
             return FAIL_BOOK_EXIST;
+        }
+        if(!authorService.isAuthorExist(bookParameters.get("author_name"))) {
+            authorService.createAuthorByName(bookParameters.get("author_name"));
         }
         book.setBookId((long) (bookRepo.findAll().lastIndexOf(book)));
         saveBookInBookRepo(book);
@@ -85,7 +80,7 @@ public class BookService {
     }
 
     public Map<String,String> updateBook(Map<String, String> bookParameters) {
-        if(!isAuthorExist(bookParameters.get("author_id"))){
+        if(!authorService.isAuthorExist(bookParameters.get("author_name"))){
             return FAIL_AUTHOR_NOT_EXIST;
         }
         if(!isBookExist(Long.parseLong(bookParameters.get("book_id")))) {
@@ -100,9 +95,9 @@ public class BookService {
     private Book bookBuilder(Map<String, String> bookParameters) {
         String name = bookParameters.get("name");
         String price = bookParameters.get("price");
-        String authorId = bookParameters.get("author_id");
+        String authorName = bookParameters.get("author_name");
         Book book = new Book();
-        book.setAuthor(authorRepo.getOne(Long.parseLong(authorId)));
+        book.setAuthor(authorService.getOrCreateAndGetAuthorByName(authorName));
         book.setName(name);
         book.setPrice(Double.parseDouble(price));
         return book;
@@ -116,5 +111,15 @@ public class BookService {
             return FAIL_BOOK_NOT_EXIST;
         }
         return SUCCESS_BOOK_WAS_DELETED;
+    }
+
+    public Map<String,String> getBookParameters(Long id) {
+        Map<String, String> bookParameters = new HashMap<>(4);
+        Book book = this.bookRepo.getOne(id);
+        bookParameters.put("book_id", String.valueOf(id));
+        bookParameters.put("name", book.getName());
+        bookParameters.put("price", String.valueOf(book.getPrice()));
+        bookParameters.put("author_name", book.getAuthor().getName());
+        return bookParameters;
     }
 }
