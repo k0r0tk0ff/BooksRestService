@@ -19,7 +19,7 @@ import java.util.Optional;
  */
 
 @RestController
-public class BookController {
+public class BookController implements EntityController {
 
     private static final Logger logger = LoggerFactory.getLogger(BookController.class);
 
@@ -33,9 +33,9 @@ public class BookController {
     }
 
     @GetMapping(value = "/api/book/{id}")
-    public ResponseEntity<Map<String, String>> getBookById(@PathVariable("id") Long id){
+    public ResponseEntity<?> getEntityById(@PathVariable("id") Long id){
         logger.info("Get book with id = {}", id);
-        Optional<Book> book = bookService.getBookById(id);
+        Optional<Book> book = bookService.getOptionalObjectForBookById(id);
         if(book.isPresent()) {
             Map<String, String> bookParameters = bookService.getBookParameters(id);
             return new ResponseEntity<>(bookParameters, HttpStatus.OK);
@@ -45,7 +45,7 @@ public class BookController {
     }
 
     @DeleteMapping(value = "/api/book/{id}")
-    public ResponseEntity<String> delBookById(@PathVariable("id") Long id){
+    public ResponseEntity<?> delEntityById(@PathVariable("id") Long id){
         logger.info("Delete book with id = {}", id);
         Map<String, String> results = bookService.delBookById(id);
         if(results.containsKey("SUCCESS")) {
@@ -57,8 +57,8 @@ public class BookController {
     }
 
     @GetMapping(value = "/api/books")
-    public ResponseEntity<List<Book>> listAllBooks() {
-        List<Book> books = bookService.getAllBooks();
+    public ResponseEntity<?> getAllEntities() {
+        List<Map<String,String>> books = bookService.getAllBooks();
         if (books.isEmpty()) {
             logger.error("Datastore with books is empty!");
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -67,14 +67,13 @@ public class BookController {
     }
 
     @PostMapping("/api/book")
-    public ResponseEntity<?> createBook(@RequestBody Map<String, String> bookParameters) {
-
+    public ResponseEntity<?> addEntity(@RequestBody Map<String, String> bookParameters) {
         Map<String, String> results = bookService.createBook(bookParameters);
         if(results.containsKey("SUCCESS")) {
             logger.info("{} Book name = \"{}\" Author name = \"{}\"",
                     results.get("SUCCESS"),
                     bookParameters.get("name"),
-                    bookParameters.get("author_name"));
+                    bookParameters.get("authorName"));
             return new ResponseEntity<>(results.get("SUCCESS"), HttpStatus.OK);
         }
             logger.error("FAIL! {}", results.get("FAIL"));
@@ -82,7 +81,7 @@ public class BookController {
     }
 
     @PutMapping("/api/book")
-    public ResponseEntity<?> updateBook(@RequestBody Map<String, String> bookParameters) {
+    public ResponseEntity<?> updateEntity(@RequestBody Map<String, String> bookParameters) {
         Map<String, String> results = bookService.updateBook(bookParameters);
         if(results.containsKey("SUCCESS")) {
             logger.info("{} Book name = \"{}\" Author id = \"{}\" price = \"{}\"",
