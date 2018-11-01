@@ -1,8 +1,10 @@
 package ru.k0r0tk0ff.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,7 +14,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "AUTHOR")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "books"})
 public class Author {
 
     public Author() {
@@ -34,7 +36,7 @@ public class Author {
 
     private String name;
 
-    @OneToMany(mappedBy = "author")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "author")
     private Set<Book> books = new HashSet<Book>();
 
     public Long getAuthorId() {
@@ -72,5 +74,14 @@ public class Author {
     @Override
     public int hashCode() {
         return name.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Author{" +
+                "authorId=" + authorId +
+                ", name='" + name + '\'' +
+                ", books=" + books +
+                '}';
     }
 }
