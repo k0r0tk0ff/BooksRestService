@@ -19,7 +19,6 @@ import java.util.Optional;
 
 @RestController
 public class AuthorController implements EntityController {
-//public class AuthorController {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthorController.class);
 
