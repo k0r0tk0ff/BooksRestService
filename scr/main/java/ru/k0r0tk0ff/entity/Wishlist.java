@@ -67,4 +67,13 @@ public class Wishlist {
     public int hashCode() {
         return book.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "Wishlist{" +
+                "wishlistId=" + wishlistId +
+                ", count=" + count +
+                ", bookName=" + book.getName() +
+                '}';
+    }
 }
