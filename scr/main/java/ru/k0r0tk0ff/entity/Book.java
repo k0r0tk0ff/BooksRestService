@@ -2,8 +2,9 @@ package ru.k0r0tk0ff.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * Created by korotkov_a_a on 26.10.2018.
@@ -11,7 +12,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "BOOK")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "wishlist"})
 public class Book {
 
     public Book() {
@@ -98,5 +99,16 @@ public class Book {
         result = 31 * result + price.hashCode();
         result = 31 * result + author.hashCode();
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "bookId=" + bookId +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", wishlistId=" + wishlist.getWishlistId() +
+                ", authorName=" + author.getName() +
+                '}';
     }
 }
