@@ -1,17 +1,14 @@
 package ru.k0r0tk0ff.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Created by korotkov_a_a on 26.10.2018.
  */
-
 @Entity
 @Table(name = "AUTHOR")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "books"})
@@ -37,7 +34,7 @@ public class Author {
     private String name;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "author")
-    private Set<Book> books = new HashSet<Book>();
+    private Set<Book> books = new HashSet<>();
 
     public Long getAuthorId() {
         return authorId;
