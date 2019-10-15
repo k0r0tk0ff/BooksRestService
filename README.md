@@ -1,39 +1,40 @@
 # BooksRestService
 BooksRestService - REST сервис для работы с сущностями "book", "author", "wishlist", согласно задания.  
 (задание - https://github.com/k0r0tk0ff/BooksRestService/blob/master/task.md)
+Для работы приложения используется in-memory database H2.
 
-#### Настройка окружения  
-Необходимо скачать ПО "H2 Database Engine" для разворачивания полноценной базы данных (далее - БД)-  
-http://www.h2database.com/h2-2018-03-18.zip и распаковать в произвольную папку.   
-
-Для операционной системы Windows,   
-к примеру, путь до распакованной папки пусть будет - "E:\tools\h2-2018-03-18".     
-запустить базу данных можно скриптом запуска "E:\tools\h2-2018-03-18\h2\bin\h2w.bat".    
-В трее появиться значек "H2 Database Engine". В браузере по умолчанию откроется web консоль,    
-в которой можно выполнять sql запросы к данной БД. (Если по каким либо причинам не открылась,      
-зайти можно по ссылке http://127.0.0.1:8082 логин - sa, пароль - не вводим.)    
 
 #### Сборка приложения      
 Перед запуском приложения его необходимо скачать по ссылке     
-https://github.com/k0r0tk0ff/BooksRestService/archive/master.zip,  
-распаковать и перейти в распакованную директорию.    
-Затем его собрать командой "mvn package" сборщиком Apache Maven      
-(Необходима версия 3.3.2 или новее. Скачать можно отсюда - https://maven.apache.org/download.cgi).  
-Должна создасться папка "target", в которой должен находиться артефакт "BooksRestService-1.0-SNAPSHOT.jar".  
-При необходимости, перед сборкой, в проекте можно отредактировав файл "data-h2.sql"  
+https://github.com/k0r0tk0ff/BooksRestService/archive/master.zip.  
+
+#### Варианты запуска приложения
+Переходим в папку, куда распаковали master.zip.
+
+Вариант 1 - Собираем проект командой "mvn package" 
+сборщиком Apache Maven (Необходима версия 3.6.2 или новее. 
+Скачать можно отсюда - https://maven.apache.org/download.cgi).  
+Должна создасться папка "target", в которой должен находиться артефакт "BooksRestService-1.0-SNAPSHOT.jar".
+Запустить приложение можно из командной строки (при наличии в системной переменной path пути до java)    
+#####"java -Dfile.encoding=UTF-8 -jar BooksRestService-1.0-SNAPSHOT.jar"    
+либо создав bat файл запуска с этим содержимым.
+  
+Вариант 2 - запустив команду "mvn spring-boot:run"
+ 
+При необходимости, перед сборкой (запуском), в проекте можно отредактировав файл "data-h2.sql"  
 куда добавить/изменить тестовые данные. Также можно собирать проект вообще без этого файла,    
 и добавить впоследствии данные посредством rest api   
 с соблюдением очередности - сначала book, затем wishlist.    
 
 ### Работа приложения   
-Запустить приложение можно из командной строки (при наличии в системной переменной path пути до java)    
-#### java -Dfile.encoding=UTF-8 -jar BooksRestService-1.0-SNAPSHOT.jar    
-либо создав bat файл запуска с этим содержимым.
+Можно использовать web-интерфейс swagger, доступный по URL
+http://127.0.0.1:8080/book-rest-service/swagger-ui.html
 
+или REST запросы -
 ### Формат работы с сущностями   
 #### BOOK 
 Добавить книгу -
-POST: http://127.0.0.1:8080/api/book    
+POST: http://127.0.0.1:8080/book-rest-service/api/book    
 {  
     "price": "1000",  
     "authorName": "Лермонтов",  
@@ -41,7 +42,7 @@ POST: http://127.0.0.1:8080/api/book
 }  
 
 Изменить книгу -  
-PUT: http://127.0.0.1:8080/api/book  
+PUT: http://127.0.0.1:8080/book-rest-service/api/book  
 {  
 	"bookId": "27",  
     "price": "1500",  
@@ -50,13 +51,13 @@ PUT: http://127.0.0.1:8080/api/book
 }  
 
 Получить информацию о книге с id = 27  
-GET: http://127.0.0.1:8080/api/book/27  
+GET: http://127.0.0.1:8080/book-rest-service/api/book/27  
 
 Удалить информацию о книге с id = 29  
-DELETE: http://127.0.0.1:8080/api/book/29     
+DELETE: http://127.0.0.1:8080/book-rest-service/api/book/29     
 
 Получить информацию о всех книгах -  
-GET: http://127.0.0.1:8080/api/books    
+GET: http://127.0.0.1:8080/book-rest-service/api/books    
 
 #### AUTHOR  
 Добавить автора -  
@@ -73,13 +74,13 @@ PUT:
 }  
 
 Получить информацию об авторе с id = 28  
-GET: http://127.0.0.1:8080/api/author/28  
+GET: http://127.0.0.1:8080/book-rest-service/api/author/28  
 
 Удалить информацию об авторе с id = 28  
-DELETE: http://127.0.0.1:8080/api/author/28  
+DELETE: http://127.0.0.1:8080/book-rest-service/api/author/28  
 
 Получить информацию обо всех авторах - 
-GET: http://127.0.0.1:8080/api/authors  
+GET: http://127.0.0.1:8080/book-rest-service/api/authors  
 
 #### WISHLIST  
 Добавить лист пожелания  
@@ -97,11 +98,11 @@ PUT:
 }    
 
 Получить информацию о листе пожелания с id = 1   
-GET: http://127.0.0.1:8080/api/wishlist/1  
+GET: http://127.0.0.1:8080/book-rest-service/api/wishlist/1  
 
 Удалить информацию о листе пожелания с id = 1   
-DELETE: http://127.0.0.1:8080/api/wishlist/1  
+DELETE: http://127.0.0.1:8080/book-rest-service/api/wishlist/1  
 
 Получить информацию о всех листах пожеланий  
-GET: http://127.0.0.1:8080/api/wishlists  
+GET: http://127.0.0.1:8080/book-rest-service/api/wishlists  
 

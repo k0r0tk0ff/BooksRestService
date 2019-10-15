@@ -11,7 +11,8 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "AUTHOR")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "books"})
+//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "books"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Author {
 
     public Author() {
