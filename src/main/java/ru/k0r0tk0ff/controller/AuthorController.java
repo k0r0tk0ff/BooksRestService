@@ -3,9 +3,9 @@ package ru.k0r0tk0ff.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
@@ -17,11 +17,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.ResponseEntity.noContent;
+import static org.springframework.http.ResponseEntity.ok;
+
 /**
  * Created by korotkov_a_a on 29.10.2018.
  */
 
 @RestController
+@AllArgsConstructor
 @Api(tags = "AuthorController", description = "Контроллер для работы с сущностью Author")
 public class AuthorController implements EntityController {
 
@@ -29,22 +34,17 @@ public class AuthorController implements EntityController {
 
     private AuthorService authorService;
 
-    @Autowired
-    public AuthorController(AuthorService authorService) {
-        this.authorService = authorService;
-    }
-
     @GetMapping(value = "/api/author/{id}")
     @ApiOperation(value = "Получить сущность 'Author' по его системному идентификатору")
     public ResponseEntity<Author> getEntityById(
             @NonNull
             @ApiParam(value = "Системный идентификатор сущности 'Author'", required = true)
-            @PathVariable("id") Long id){
+            @PathVariable("id") Long id) {
         logger.info("Get author with id = {}", id);
         Optional<Author> author = authorService.getAuthorById(id);
-        if(author.isPresent()) {return new ResponseEntity<Author>(author.get(), HttpStatus.OK);}
-        logger.error("Author with id {} not found!", id);
-        return new ResponseEntity<Author>(HttpStatus.NO_CONTENT);
+        if (author.isEmpty()) logger.error("Author with id {} not found!", id);
+
+        return author.isPresent() ? ok(author.get()) : noContent().build();
     }
 
     @DeleteMapping(value = "/api/author/{id}")
@@ -55,20 +55,19 @@ public class AuthorController implements EntityController {
             @PathVariable("id") Long id) {
         if (!authorService.isAuthorExist(id)) {
             logger.error("Author does not exist!");
-            return new ResponseEntity<>("Author does not exist!", HttpStatus.CONFLICT);
+            return ResponseEntity.status(CONFLICT).body("Author does not exist!");
         }
         authorService.deleteAuthorById(id);
-        return new ResponseEntity<String>("Delete author success.", HttpStatus.OK);
+
+        return ok("Delete author success.");
     }
 
     @GetMapping(value = "/api/authors")
     @ApiOperation(value = "Получить все сущности 'Author'")
     public ResponseEntity<List<Author>> getAllEntities() {
         List<Author> authors = authorService.getAllAuthors();
-        if (authors.isEmpty()) {
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(authors, HttpStatus.OK);
+
+        return authors.isEmpty() ? noContent().build() : ok(authors);
     }
 
     @PostMapping(value = "/api/author", consumes = "application/json;charset=UTF-8")
@@ -77,15 +76,16 @@ public class AuthorController implements EntityController {
             @NonNull
             @ApiParam(value = "Данные для новой сущности 'Author'", required = true)
             @RequestBody Map<String, String> authorParameters) {
-        if(authorService.isInputParameterNameValid(authorParameters)) {
-        Author author = new Author(authorParameters.get("name"));
-        if (authorService.isAuthorExist(author)) {
-            logger.error("Author \"{}\" exist! ", author.getName());
-            return new ResponseEntity<>("Author exist.", HttpStatus.CONFLICT);
-        }
-        authorService.saveAuthor(author);
-        return new ResponseEntity<>("Create author success.", HttpStatus.OK);
-        } else return new ResponseEntity<>("Incorrect input.", HttpStatus.CONFLICT);
+        if (authorService.isInputParameterNameValid(authorParameters)) {
+            Author author = new Author(authorParameters.get("name"));
+            if (authorService.isAuthorExist(author)) {
+                logger.error("Cannot create author whith namr \"{}\", he (she) is exist! ", author.getName());
+                return ResponseEntity.status(CONFLICT).body("Such an author exists!");
+            }
+            authorService.saveAuthor(author);
+
+            return ok("Create author success.");
+        } else return ResponseEntity.status(CONFLICT).body("Incorrect input.");
     }
 
     @PutMapping(value = "/api/author")
@@ -95,13 +95,14 @@ public class AuthorController implements EntityController {
             @ApiParam(value = "Обновленные данные сущности 'Author'", required = true)
             @RequestBody Map<String, String> authorParameters) {
         if (authorService.isInputParametersForUpdateValid(authorParameters)) {
-        if (!authorService.isAuthorExist(Long.parseLong(authorParameters.get("authorId")))) {
-            logger.error("Author does not exist!");
-            return new ResponseEntity<>("Author does not exist!", HttpStatus.CONFLICT);
-        }
-        authorService.updateAuthor(authorParameters);
-        return new ResponseEntity<>("Update author success.", HttpStatus.OK);
-        } else return new ResponseEntity<>("Incorrect input.", HttpStatus.CONFLICT);
+            if (!authorService.isAuthorExist(Long.parseLong(authorParameters.get("authorId")))) {
+                logger.error("Author does not exist!");
+                return new ResponseEntity<>("Author does not exist!", CONFLICT);
+            }
+            authorService.updateAuthor(authorParameters);
+
+            return ok("Update author success.");
+        } else return ResponseEntity.status(CONFLICT).body("Incorrect input.");
     }
 }
 

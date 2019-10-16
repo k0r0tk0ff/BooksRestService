@@ -6,80 +6,39 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import lombok.*;
+
 /**
  * Created by korotkov_a_a on 26.10.2018.
  */
 @Entity
 @Table(name = "AUTHOR")
-//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "books"})
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class Author {
-
-    public Author() {
-    }
 
     public Author(String name) {
         this.name = name;
     }
 
-    public Author(String name, Set<Book> books) {
-        this.name = name;
-        this.books = books;
-    }
-
     @Id
+    @Getter
+    @Setter
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "author_id")
     private Long authorId;
 
+    @Getter
+    @Setter
     private String name;
 
+    @Getter
+    @Setter
+    @EqualsAndHashCode.Exclude
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "author")
     private Set<Book> books = new HashSet<>();
 
-    public Long getAuthorId() {
-        return authorId;
-    }
-
-    public void setAuthorId(Long authorId) {
-        this.authorId = authorId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Set<Book> getBooks() {
-        return books;
-    }
-
-    public void setBooks(Set<Book> books) {
-        this.books = books;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Author author = (Author) o;
-        return name.equals(author.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return name.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return "Author{" +
-                "authorId=" + authorId +
-                ", name='" + name + '\'' +
-                ", books=" + books +
-                '}';
-    }
 }

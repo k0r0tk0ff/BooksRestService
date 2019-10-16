@@ -15,6 +15,7 @@
         <spring.boot.release.version>2.1.4.RELEASE</spring.boot.release.version>
         <springfox-swagger-version>2.9.2</springfox-swagger-version>
         <swagger-annotations-version>1.5.21</swagger-annotations-version>
+        <org-projectlombok-version>1.18.0</org-projectlombok-version>
     </properties>
 
     <parent>
@@ -87,6 +88,14 @@
             <groupId>io.swagger</groupId>
             <artifactId>swagger-models</artifactId>
             <version>${swagger-annotations-version}</version>
+        </dependency>
+
+        <!--lombok-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+            <version>${org-projectlombok-version}</version>
         </dependency>
     </dependencies>
 

@@ -1,5 +1,6 @@
 package ru.k0r0tk0ff.service;
 
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,18 +17,16 @@ import java.util.Optional;
  */
 
 @Service
+@AllArgsConstructor
 public class AuthorService {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthorService.class);
     private AuthorRepo authorRepo;
 
-    @Autowired
-    public AuthorService(AuthorRepo authorRepo) {
-        this.authorRepo = authorRepo;
-    }
-
     public Optional<Author> getAuthorById(Long id) {
-        return authorRepo.findById(id);
+        Optional<Author> author = authorRepo.findById(id);
+
+        return author;
     }
 
     public List<Author> getAllAuthors() {
