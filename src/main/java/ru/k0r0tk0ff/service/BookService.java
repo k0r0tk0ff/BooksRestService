@@ -1,5 +1,6 @@
 package ru.k0r0tk0ff.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
  */
 
 @Service
+@AllArgsConstructor
 public class BookService {
     private static final Map<String, String> SUCCESS_UPDATED = new HashMap<String, String>() {
         { put("SUCCESS", "The book was successfully updated.");}
@@ -37,12 +39,6 @@ public class BookService {
 
     private BookRepo bookRepo;
     private AuthorService authorService;
-
-    @Autowired
-    public BookService(BookRepo bookRepo, AuthorService authorService) {
-        this.bookRepo = bookRepo;
-        this.authorService = authorService;
-    }
 
     public Optional<Book> getOptionalObjectForBookById(Long id) {
         return bookRepo.findById(id);

@@ -4,9 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
@@ -25,12 +23,11 @@ import static org.springframework.http.ResponseEntity.ok;
  * Created by korotkov_a_a on 29.10.2018.
  */
 
+@Slf4j
 @RestController
 @AllArgsConstructor
 @Api(tags = "AuthorController", description = "Контроллер для работы с сущностью Author")
 public class AuthorController implements EntityController {
-
-    private static final Logger logger = LoggerFactory.getLogger(AuthorController.class);
 
     private AuthorService authorService;
 
@@ -40,9 +37,9 @@ public class AuthorController implements EntityController {
             @NonNull
             @ApiParam(value = "Системный идентификатор сущности 'Author'", required = true)
             @PathVariable("id") Long id) {
-        logger.info("Get author with id = {}", id);
+        log.info("Get author with id = {}", id);
         Optional<Author> author = authorService.getAuthorById(id);
-        if (author.isEmpty()) logger.error("Author with id {} not found!", id);
+        if (author.isEmpty()) log.error("Author with id {} not found!", id);
 
         return author.isPresent() ? ok(author.get()) : noContent().build();
     }
@@ -54,7 +51,7 @@ public class AuthorController implements EntityController {
             @ApiParam(value = "Системный идентификатор сущности 'Author'", required = true)
             @PathVariable("id") Long id) {
         if (!authorService.isAuthorExist(id)) {
-            logger.error("Author does not exist!");
+            log.error("Author does not exist!");
             return ResponseEntity.status(CONFLICT).body("Author does not exist!");
         }
         authorService.deleteAuthorById(id);
@@ -79,7 +76,7 @@ public class AuthorController implements EntityController {
         if (authorService.isInputParameterNameValid(authorParameters)) {
             Author author = new Author(authorParameters.get("name"));
             if (authorService.isAuthorExist(author)) {
-                logger.error("Cannot create author whith namr \"{}\", he (she) is exist! ", author.getName());
+                log.error("Cannot create author whith namr \"{}\", he (she) is exist! ", author.getName());
                 return ResponseEntity.status(CONFLICT).body("Such an author exists!");
             }
             authorService.saveAuthor(author);
@@ -96,7 +93,7 @@ public class AuthorController implements EntityController {
             @RequestBody Map<String, String> authorParameters) {
         if (authorService.isInputParametersForUpdateValid(authorParameters)) {
             if (!authorService.isAuthorExist(Long.parseLong(authorParameters.get("authorId")))) {
-                logger.error("Author does not exist!");
+                log.error("Author does not exist!");
                 return new ResponseEntity<>("Author does not exist!", CONFLICT);
             }
             authorService.updateAuthor(authorParameters);
