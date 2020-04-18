@@ -11,7 +11,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>1.8</java.version>
         <spring.boot.release.version>2.1.4.RELEASE</spring.boot.release.version>
         <springfox-swagger-version>2.9.2</springfox-swagger-version>
         <swagger-annotations-version>1.5.21</swagger-annotations-version>
@@ -113,16 +113,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
-                <configuration>
-                    <release>11</release>  <!-- same as <java.version> -->
-                    <target>11</target>    <!-- same as <java.version> -->
-                </configuration>
-            </plugin>
         </plugins>
     </build>
-
 </project>

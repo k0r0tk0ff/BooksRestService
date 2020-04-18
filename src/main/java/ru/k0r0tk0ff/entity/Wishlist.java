@@ -23,7 +23,7 @@ public class Wishlist {
     @Id
     @Getter
     @Setter
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "wishlist_id")
     private Long wishlistId;
 

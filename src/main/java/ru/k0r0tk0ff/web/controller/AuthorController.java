@@ -1,4 +1,4 @@
-package ru.k0r0tk0ff.controller;
+package ru.k0r0tk0ff.web.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,7 +39,7 @@ public class AuthorController implements EntityController {
             @PathVariable("id") Long id) {
         log.info("Get author with id = {}", id);
         Optional<Author> author = authorService.getAuthorById(id);
-        if (author.isEmpty()) log.error("Author with id {} not found!", id);
+        if (!author.isPresent()) log.error("Author with id {} not found!", id);
 
         return author.isPresent() ? ok(author.get()) : noContent().build();
     }
@@ -68,7 +68,7 @@ public class AuthorController implements EntityController {
     }
 
     @PostMapping(value = "/api/author", consumes = "application/json;charset=UTF-8")
-    @ApiOperation(value = "Создать сущность 'Author' в соответствии с полученными данными")
+    @ApiOperation(value = "orig Создать сущность 'Author' в соответствии с полученными данными")
     public ResponseEntity<?> addEntity(
             @NonNull
             @ApiParam(value = "Данные для новой сущности 'Author'", required = true)
@@ -80,7 +80,6 @@ public class AuthorController implements EntityController {
                 return ResponseEntity.status(CONFLICT).body("Such an author exists!");
             }
             authorService.saveAuthor(author);
-
             return ok("Create author success.");
         } else return ResponseEntity.status(CONFLICT).body("Incorrect input.");
     }

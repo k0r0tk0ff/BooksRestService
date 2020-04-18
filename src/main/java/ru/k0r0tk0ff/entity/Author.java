@@ -1,12 +1,11 @@
 package ru.k0r0tk0ff.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
-
-import lombok.*;
 
 /**
  * Created by korotkov_a_a on 26.10.2018.
@@ -27,7 +26,7 @@ public class Author {
     @Id
     @Getter
     @Setter
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "author_id")
     private Long authorId;
 

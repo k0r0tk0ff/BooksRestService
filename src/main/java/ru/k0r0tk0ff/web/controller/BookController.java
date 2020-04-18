@@ -1,4 +1,4 @@
-package ru.k0r0tk0ff.controller;
+package ru.k0r0tk0ff.web.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.k0r0tk0ff.entity.Book;
-import ru.k0r0tk0ff.service.AuthorService;
 import ru.k0r0tk0ff.service.BookService;
 
 import java.util.List;
