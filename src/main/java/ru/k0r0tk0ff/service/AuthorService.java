@@ -15,7 +15,6 @@ import java.util.Optional;
 /**
  * Created by korotkov_a_a on 29.10.2018.
  */
-
 @Service
 @AllArgsConstructor
 public class AuthorService {
